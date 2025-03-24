@@ -2,36 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./config/i18n/routing";
 
-// Create the middleware
-const intlMiddleware = createMiddleware({
-  locales: routing.locales,
-  defaultLocale: routing.defaultLocale,
-  localePrefix: 'always'
-});
-
 const PROTECTED_ROUTES = ["/reserved"];
+const intlMiddleware = createMiddleware(routing);
 
-export default async function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-  
-  // Handle authentication for protected routes
-  if (PROTECTED_ROUTES.some(route => pathname.startsWith(route))) {
-    const token = request.cookies.get(process.env.AUTH_COOKIE!)?.value;
+export default  function Middleware(req: NextRequest) {
+  const url = new URL(req.url);
+  const pathname = url.pathname;
+  const pathWithoutLocale = pathname.replace(/^\/(?:en|es|fr)/, "");
+
+  const token = req?.cookies?.get(process.env.AUTH_COOKIE!)?.value
+  const redirectUrl = new URL(`/en/auth/code`, req.url);
+  redirectUrl.searchParams.set("redirect", pathWithoutLocale);
+
+  if (PROTECTED_ROUTES.includes(pathWithoutLocale)) {
     if (!token) {
-      const redirectUrl = new URL(`/${routing.defaultLocale}/auth/code`, request.url);
-      redirectUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(redirectUrl);
     }
   }
 
-  // Handle internationalization
-  return intlMiddleware(request);
+  return intlMiddleware(req);
 }
 
 export const config = {
-  // Match all pathnames except for
-  // - files with extensions (e.g. /logo.png)
-  // - internal Next.js paths (/api/, /_next/)
-  // - favicon.ico
-  matcher: ['/', '/((?!api|_next|.*\\..*).*)']
+  matcher: ["/", "/(en|es|fr)/:path*", "/reserved","/thanks"],
 };
