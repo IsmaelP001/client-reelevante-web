@@ -4,12 +4,10 @@ import Image from "next/image";
 import { useMediaQuery } from "react-responsive";
 import SelectLanguage from "./SelectLanguage";
 import { Link, usePathname } from "@/config/i18n/routing";
-import { Search } from "lucide-react";
+import { LogIn, Search, SearchIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import NavbarV2 from "./NavbarV2";
 import { CartSidebarTrigger } from "./CartSidebar";
-
-
 
 const navbarv2MobileRoutes = [
   {
@@ -42,7 +40,7 @@ const navbarv2MobileRoutes = [
 export default function Navbar() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 770px)" });
   const path = usePathname();
-  
+
   const pathInfo = navbarv2MobileRoutes.find((route) => route.path === path);
   const isReservedDesktop = path === "/reserved" && !isTabletOrMobile;
 
@@ -58,22 +56,31 @@ export default function Navbar() {
 
   if (isTabletOrMobile) {
     return (
-      <nav className="flex justify-between px-2 py-2 bg-white">
+      <nav className="flex justify-between items-center px-2 py-2 bg-white">
         <SelectLanguage />
-        <figure className="relative w-[160px] h-[50px]">
-          <Image
-            fill
-            className="object-contain"
-            src="/images/releevante.svg"
-            alt="Releevante Logo"
-            sizes="160px"
-          />
+        <figure className="relative ml-8 w-[160px] h-[50px]">
+          <Link href="/">
+            <Image
+              fill
+              className="object-contain"
+              src="/images/releevante.svg"
+              alt="Releevante Logo"
+              sizes="160px"
+            />
+          </Link>
         </figure>
-        <CartSidebarTrigger />
+        <div className="flex gap-2 items-center">
+          <Link href="/search">
+            <SearchIcon />
+          </Link>
+          <Link href="/auth/code">
+            <LogIn />
+          </Link>
+          <CartSidebarTrigger />
+        </div>
       </nav>
     );
   }
-
 
   return (
     <nav className="flex gap-5 px-4 justify-between items-center py-1 border-b border-gray-300 bg-white">
@@ -105,7 +112,10 @@ export default function Navbar() {
         </div>
       </Link>
       <div className="flex gap-2 items-center">
-        <Button variant="outline" className="rounded-3xl px-4 py-2 bg-inherit border-gray-500">
+        <Button
+          variant="outline"
+          className="rounded-3xl px-4 py-2 bg-inherit border-gray-500"
+        >
           <span className="text-xs">Login</span>
         </Button>
         <SelectLanguage />

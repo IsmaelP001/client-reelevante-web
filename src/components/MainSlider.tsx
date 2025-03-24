@@ -71,7 +71,7 @@ export default function MainSliderBooks() {
                 activeSlide === index && !isTabletOrMobile 
                   ? "shadow-xl h-[300px]  translate-y-[20%] "
                   : oldSlide === index && !isTabletOrMobile
-                  ? " h-[450px]  translate-y-0 "
+                  ? " h-[400px]  translate-y-0 "
                   : getNextSlide(index)
                   ? `opacity-50 h-[200px]  ${isTabletOrMobile ? 'translate-y-0':'translate-y-[50%]'}`
                   :`opacity-50 h-[200px]  ${isTabletOrMobile ? 'translate-y-0':'translate-y-[50%]'}`
