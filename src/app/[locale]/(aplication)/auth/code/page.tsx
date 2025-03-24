@@ -9,15 +9,15 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 const PAGES=[{
-    path:'/catalog',
+    path:'/en/catalog',
     label:'Home'
 },
 {
-    path:'/cart',
+    path:'/en/cart',
     label:'MyCart'
 },
 {
-    path:'/code',
+    path:'/en/code',
     label:'Code',
     isCurrentPath:true
 },
